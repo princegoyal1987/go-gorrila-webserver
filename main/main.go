@@ -5,18 +5,22 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/princegoyal1987/go-gorrila-webserver/controller"
 	"net/http"
+        "github.com/gorilla/context"
 )
 
 var r = new(mux.Router)
 
-type handlerFunc func(http.ResponseWriter, *http.Request) error
 
-func (f handlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	err := f(w, r)
-	if err != nil {
-		panic("and it failed")
-	}
+func AddUserDataToContext(handler http.Handler) http.Handler {
+    ourFunc := func(w http.ResponseWriter, r *http.Request) {
+	user_id := r.URL.Query()["user_id"]
+        context.Set(r,"user_id",user_id)
+	fmt.Print(user_id);
+        handler.ServeHTTP(w, r)
+    }
+    return http.HandlerFunc(ourFunc)
 }
+
 
 func homeHandler(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Add("Content-Type", "text/html")
@@ -25,12 +29,11 @@ func homeHandler(w http.ResponseWriter, r *http.Request) error {
 }
 
 func init1() {
-	r.Handle("/", handlerFunc(homeHandler)).Name("home")
+	r.Handle("/", AddUserDataToContext(http.HandlerFunc(controller.HomeHandler1))).Name("home")
 	r.HandleFunc("/1", controller.HomeHandler1).Name("home1")
+        r.HandleFunc("/UserNew", controller.UserNew).Name("UserNew")
         r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 }
-
-type funcType func() error
 
 func main() {
 	init1()
