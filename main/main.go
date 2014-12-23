@@ -27,7 +27,11 @@ func AddUserDataToContext(handler http.Handler) http.Handler {
 func init1() {
 	r.Handle("/", AddUserDataToContext(http.HandlerFunc(controller.HomeHandler1))).Name("home")
         r.Handle("/user/new", AddUserDataToContext(http.HandlerFunc(controller.UserNew))).Name("home")
+        r.Handle("/usercurrency/get",AddUserDataToContext(http.HandlerFunc(controller.UserCurrencyGet)))
+        r.Handle("/usercurrency/update",AddUserDataToContext(http.HandlerFunc(controller.UserCurrencyUpdate)))
+
         r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
 }
 
 func main() {

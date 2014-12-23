@@ -60,7 +60,7 @@ func GetData(w http.ResponseWriter, r *http.Request) {
 		var userCurrency *models.UserCurrency
 		userIdInt, _ := strconv.ParseInt(userId, 0, 64)
 
-		userCurrency = &models.UserCurrency{userIdInt, "silver", 10000}
+                userCurrency = &models.UserCurrency{UserId:userIdInt, CurrencyName:"silver", Amount:10000}
 
 		if err := models.Dbm.Insert(userCurrency); err != nil {
 			panic(err)

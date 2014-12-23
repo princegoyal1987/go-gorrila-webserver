@@ -32,9 +32,9 @@ func InitDB() {
 		"Email":          250,
 	})
 
-	t = Dbm.AddTable(UserCurrency{}).SetKeys(true, "UserId")
+	t = Dbm.AddTable(UserCurrency{}).SetKeys(true, "UserCurrencyId")
 	setColumnSizes(t, map[string]int{
-		"CurrencyId": 128,
+		"CurrencyName": 128,
 	})
 
 	Dbm.TraceOn("[gorp]", r.INFO)

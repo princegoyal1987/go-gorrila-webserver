@@ -13,8 +13,9 @@ type User struct {
 
 
 type UserCurrency struct {
+        UserCurrencyId int64
 	UserId     int64
-	CurrencyId string
+	CurrencyName string
 	Amount     int64
 }
 
