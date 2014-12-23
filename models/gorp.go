@@ -1,7 +1,6 @@
 package models
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
 	"github.com/coopernurse/gorp"
 	_ "github.com/mattn/go-sqlite3"
@@ -48,22 +47,6 @@ func InitDB() {
 	Dbm.TraceOn("[gorp]", r.INFO)
 	Dbm.CreateTables()
 
-	//add user
-	bcryptPassword, _ := bcrypt.GenerateFromPassword(
-		[]byte("demo"), bcrypt.DefaultCost)
-	demoUser := &User{0, "demo name", "deviceId", "emailaddr","facebookid" ,"password"}
-	if err := Dbm.Insert(demoUser); err != nil {
-		panic(err)
-	}
-
-	//add one admin user
-	bcryptPassword, _ = bcrypt.GenerateFromPassword(
-		[]byte("adminuser"), bcrypt.DefaultCost)
-	adminUser := &AdminUser{0, "admin user", "adminuser", "adminuser", bcryptPassword}
-	if err := Dbm.Insert(adminUser); err != nil {
-		panic(err)
-	}
-	
 }
 
 type GorpController struct {
