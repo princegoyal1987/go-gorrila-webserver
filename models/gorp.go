@@ -5,7 +5,7 @@ import (
 	"github.com/coopernurse/gorp"
 	_ "github.com/mattn/go-sqlite3"
 	r "github.com/revel/revel"
-        "log"
+	"log"
 )
 
 var (
@@ -13,37 +13,30 @@ var (
 )
 
 func InitDB() {
-        db,err := sql.Open("sqlite3","testgorp.sqlite")
-        if err != nil {
-            log.Fatalln("failed to open db",err)
-        }
+	db, err := sql.Open("sqlite3", "testgorp.sqlite")
+	if err != nil {
+		log.Fatalln("failed to open db", err)
+	}
 	Dbm = &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	setColumnSizes := func(t *gorp.TableMap, colSizes map[string]int) {
 		for col, size := range colSizes {
 			t.ColMap(col).MaxSize = size
 		}
 	}
-	
+
 	t := Dbm.AddTable(User{}).SetKeys(true, "UserId")
 	setColumnSizes(t, map[string]int{
-		"Name":     250,
-		"HashedPassword":     250,
-		"DeviceId": 250,
-		"Email":	250,
+		"Name":           250,
+		"HashedPassword": 250,
+		"DeviceId":       250,
+		"Email":          250,
 	})
-	
-	t = Dbm.AddTable(AdminUser{}).SetKeys(true, "UserId")
-	t.ColMap("Password").Transient = true
-	setColumnSizes(t, map[string]int{
-		"Username": 20,
-		"Name":     100,
-	})
-	
+
 	t = Dbm.AddTable(UserCurrency{}).SetKeys(true, "UserId")
 	setColumnSizes(t, map[string]int{
 		"CurrencyId": 128,
 	})
-	
+
 	Dbm.TraceOn("[gorp]", r.INFO)
 	Dbm.CreateTables()
 
@@ -83,9 +76,4 @@ func (c *GorpController) Rollback() r.Result {
 	}
 	c.Txn = nil
 	return nil
-}
-
-
-func main() {
-    InitDB()
 }
